@@ -454,55 +454,8 @@
 <div class="wrap">
   <section class="hero">
     <div class="eyebrow">interactive console<span class="cursor"></span></div>
-    <h1>혼자 설계하고,<br>운영합니다.</h1>
     <p>기획부터 인프라 설계, 자동화 빌드 및 무중단 배포, 그리고 실시간 모니터링까지 서비스 구축 전 과정을 전담하여 신뢰할 수 있는 상용 제품을 만듭니다. 기술적 디테일과 실질적 정합성을 중요하게 다룹니다.</p>
-    <div class="stat-row">
-      <div class="stat-card">
-        <b id="statLive">4</b>
-        <span>Active Services</span>
-      </div>
-      <div class="stat-card">
-        <b id="statDev">0</b>
-        <span>In Development</span>
-      </div>
-      <div class="stat-card">
-        <b>99.9%</b>
-        <span>Service Uptime</span>
-      </div>
-      <div class="stat-card">
-        <b>1-Person</b>
-        <span>Full-Stack Builder</span>
-      </div>
-    </div>
   </section>
-
-  <div class="section-head" style="padding-top: 32px;">
-    <h2>Choose Your Path</h2>
-    <small>원하시는 목적지를 선택해 주세요</small>
-  </div>
-
-  <div class="gateway">
-    <a class="gate-card" href="#services">
-      <span class="gate-icon">01 · Explore</span>
-      <span class="gate-title">서비스 둘러보기</span>
-      <p class="gate-desc">단축 URL 서비스부터 실시간 게시판, 치과 재고 관리 SaaS까지 운영 중인 제품을 직접 체험해 보세요.</p>
-      <span class="gate-cta">아래에서 확인하기 ↓</span>
-    </a>
-    <a class="gate-card soon" href="https://work.pl3.kr/" onclick="return false;">
-      <span class="soon-chip">준비중</span>
-      <span class="gate-icon">02 · Business</span>
-      <span class="gate-title">협업 및 프로젝트 의뢰</span>
-      <p class="gate-desc">완결성 높은 서비스 빌더가 필요하신가요? 지금까지의 핵심 레퍼런스와 기술 결정을 확인하실 수 있습니다.</p>
-      <span class="gate-cta">work.pl3.kr 준비 중</span>
-    </a>
-    <a class="gate-card soon" href="https://course.pl3.kr/" onclick="return false;">
-      <span class="soon-chip">준비중</span>
-      <span class="gate-icon">03 · Tech Share</span>
-      <span class="gate-title">경험 및 개발 노하우</span>
-      <p class="gate-desc">기획부터 인프라 구성, 실사용 단계까지 1인 서비스 구축 전략에 관한 기술 지식을 공유합니다.</p>
-      <span class="gate-cta">course.pl3.kr 준비 중</span>
-    </a>
-  </div>
 
   <div class="section-head" id="services">
     <h2>Running Services</h2>
@@ -662,9 +615,6 @@ function toggleCard(i){
   }
 }
 
-// Live Status Sync
-document.getElementById('statLive').textContent = projects.filter(p => p.status === 'live').length;
-document.getElementById('statDev').textContent = projects.filter(p => p.status === 'dev').length;
 
 // System Clock (KST)
 function tick(){
