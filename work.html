@@ -28,14 +28,34 @@
 			background: #008a8a;
 			color: #fff;
 		}
+		.service-card-custom {
+			background: rgba(255, 255, 255, 0.02);
+			border: 1px solid rgba(0, 0, 0, 0.08);
+			border-radius: 12px;
+			overflow: hidden;
+			transition: all 0.3s ease;
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			margin-bottom: 30px;
+		}
+		html[data-theme="dark"] .service-card-custom {
+			background: rgba(0, 0, 0, 0.25);
+			border-color: rgba(255, 255, 255, 0.08);
+		}
+		.service-card-custom:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 25px rgba(0, 172, 172, 0.15);
+			border-color: #00acac;
+		}
 		.service-img-box {
 			height: 180px;
 			overflow: hidden;
-			border-radius: 8px 8px 0 0;
 			background: #000;
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			flex-shrink: 0;
 		}
 		.service-img-box img {
 			width: 100%;
@@ -44,20 +64,32 @@
 			opacity: 0.8;
 			transition: transform 0.3s ease;
 		}
-		.service:hover .service-img-box img {
+		.service-card-custom:hover .service-img-box img {
 			transform: scale(1.05);
 			opacity: 1;
 		}
-		.service-info {
-			padding: 20px;
-			border: 1px solid rgba(0,0,0,0.08);
-			border-top: none;
-			border-radius: 0 0 8px 8px;
-			background: rgba(255,255,255,0.02);
+		.service-info-custom {
+			padding: 24px;
+			flex: 1;
+			display: flex;
+			flex-direction: column;
 		}
-		html[data-theme="dark"] .service-info {
-			background: rgba(0,0,0,0.25);
-			border-color: rgba(255,255,255,0.08);
+		.service-info-custom .title {
+			font-size: 18px;
+			font-weight: 700;
+			margin-top: 0;
+			margin-bottom: 12px;
+			line-height: 1.4;
+		}
+		.service-info-custom .desc {
+			font-size: 14px;
+			color: #666;
+			line-height: 1.6;
+			margin-bottom: 15px;
+			flex-grow: 1;
+		}
+		html[data-theme="dark"] .service-info-custom .desc {
+			color: #94a3b8;
 		}
 		.tech-badge-container {
 			margin-top: 15px;
@@ -331,11 +363,11 @@
 				<div class="row">
 					<!-- begin col-4 -->
 					<div class="col-lg-4">
-						<div class="service">
+						<div class="service-card-custom">
 							<div class="service-img-box">
 								<img src="assets/mvp_dev.png" alt="MVP Development">
 							</div>
-							<div class="service-info">
+							<div class="service-info-custom">
 								<h4 class="title">01. 신속한 MVP 설계 및 풀스택 구축</h4>
 								<p class="desc">빠른 가설 검증과 시장 론칭을 목표로, 사용자 경험이 녹아있는 완결성 높은 프로토타입 제품군을 가동 가능한 형태로 신속 배포합니다.</p>
 								<div class="tech-badge-container">
@@ -349,11 +381,11 @@
 					<!-- end col-4 -->
 					<!-- begin col-4 -->
 					<div class="col-lg-4">
-						<div class="service">
+						<div class="service-card-custom">
 							<div class="service-img-box">
 								<img src="assets/backend_eng.png" alt="High Performance Server">
 							</div>
-							<div class="service-info">
+							<div class="service-info-custom">
 								<h4 class="title">02. 고가용성 백엔드 및 동시성 설계</h4>
 								<p class="desc">Go 및 Spring Boot 기술 스택을 적극 활용하여 비즈니스의 트랜잭션 충돌(비관적 락 등 제어)을 완벽 차단하고 고성능 API 서버를 설계합니다.</p>
 								<div class="tech-badge-container">
@@ -367,11 +399,11 @@
 					<!-- end col-4 -->
 					<!-- begin col-4 -->
 					<div class="col-lg-4">
-						<div class="service">
+						<div class="service-card-custom">
 							<div class="service-img-box">
 								<img src="assets/sys_tuning.png" alt="Infrastructure Tuning">
 							</div>
-							<div class="service-info">
+							<div class="service-info-custom">
 								<h4 class="title">03. 인프라 최적화 및 DB 튜닝</h4>
 								<p class="desc">클라우드 서버의 비효율적 과부하 비용을 절감하며, Redis Stream 등을 결합한 대기열 처리 및 슬라이딩 윈도우 캐싱 인프라 튜닝을 구축합니다.</p>
 								<div class="tech-badge-container">
