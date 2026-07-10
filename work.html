@@ -1,526 +1,636 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>pl3.kr :: 프로젝트 의뢰 & 협업</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #060813;
-    --bg-gradient: radial-gradient(circle at 50% -20%, #1e1b4b 0%, #060813 60%);
-    --panel: rgba(15, 23, 42, 0.45);
-    --panel-hover: rgba(30, 41, 59, 0.65);
-    --border: rgba(99, 102, 241, 0.15);
-    --border-hover: rgba(99, 102, 241, 0.45);
-    --text: #f8fafc;
-    --text-dim: #94a3b8;
-    --text-faint: #475569;
-    --accent: #6366f1;
-    --accent-glow: rgba(99, 102, 241, 0.25);
-    --cyan: #06b6d4;
-    --violet: #8b5cf6;
-    
-    --sans: 'Outfit', 'Noto Sans KR', sans-serif;
-    --mono: 'JetBrains Mono', monospace;
-  }
-
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  
-  body {
-    margin: 0;
-    background: var(--bg);
-    background-image: var(--bg-gradient);
-    color: var(--text);
-    font-family: var(--sans);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-    position: relative;
-  }
-
-  /* Grid Overlay */
-  body::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    z-index: -2;
-    background-image: linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-  }
-
-  /* Ambient Glow Spheres */
-  .glow-orb {
-    position: absolute;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
-    border-radius: 50%;
-    z-index: -1;
-    pointer-events: none;
-  }
-  .orb-1 { top: -200px; right: -200px; background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%); }
-  .orb-2 { top: 800px; left: -300px; background: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%); }
-
-  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-
-  /* ---------- Header ---------- */
-  header {
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    background: rgba(6, 8, 19, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    position: sticky; top: 0; z-index: 100;
-  }
-  .header-inner {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 16px 0;
-  }
-  .logo {
-    font-size: 20px; font-weight: 800; letter-spacing: -0.02em;
-    background: linear-gradient(to right, var(--text), var(--accent));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .back-btn {
-    font-family: var(--sans); font-size: 14px; font-weight: 600;
-    color: var(--text-dim); border: 1px solid rgba(255,255,255,0.1);
-    padding: 8px 16px; border-radius: 10px; transition: all 0.2s ease;
-    background: rgba(255,255,255,0.02);
-  }
-  .back-btn:hover {
-    color: var(--text); border-color: var(--text);
-    background: rgba(255,255,255,0.05);
-  }
-
-  /* ---------- Hero Section ---------- */
-  .hero { text-align: center; padding: 120px 0 80px; position: relative; }
-  .hero-tag {
-    display: inline-block; font-family: var(--mono); font-size: 12px; font-weight: 600;
-    color: var(--cyan); background: rgba(6, 182, 212, 0.1);
-    padding: 4px 12px; border-radius: 30px; border: 1px solid rgba(6, 182, 212, 0.2);
-    margin-bottom: 24px; letter-spacing: 0.05em; text-transform: uppercase;
-  }
-  .hero h1 {
-    font-size: clamp(38px, 6vw, 64px); font-weight: 900; line-height: 1.15;
-    margin: 0 0 24px; letter-spacing: -0.03em;
-  }
-  .hero h1 span {
-    background: linear-gradient(135deg, var(--accent) 30%, var(--violet) 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .hero p {
-    font-size: 18px; color: var(--text-dim); max-width: 720px; margin: 0 auto 40px;
-    line-height: 1.7; font-weight: 350;
-  }
-  .hero-ctas { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
-  .btn-primary {
-    font-size: 15px; font-weight: 700; color: #fff; background: var(--accent);
-    padding: 14px 28px; border-radius: 12px; transition: all 0.25s ease;
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 10px 25px var(--accent-glow);
-  }
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
-    background: #4f46e5;
-  }
-  .btn-secondary {
-    font-size: 15px; font-weight: 700; color: var(--text); background: rgba(255,255,255,0.04);
-    padding: 14px 28px; border-radius: 12px; transition: all 0.25s ease;
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-  .btn-secondary:hover {
-    transform: translateY(-2px);
-    background: rgba(255,255,255,0.08);
-    border-color: var(--text-dim);
-  }
-
-  /* ---------- Section Layout ---------- */
-  .section { padding: 80px 0; }
-  .section-title { text-align: center; margin-bottom: 56px; }
-  .section-title h2 { font-size: clamp(28px, 4vw, 38px); font-weight: 800; margin: 0 0 16px; letter-spacing: -0.02em; }
-  .section-title p { color: var(--text-dim); font-size: 16px; max-width: 500px; margin: 0 auto; }
-
-  /* ---------- Strengths Section ---------- */
-  .strengths { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .strength-card {
-    background: var(--panel); border: 1px solid var(--border); border-radius: 20px;
-    padding: 32px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  }
-  .strength-card:hover {
-    border-color: var(--border-hover); background: var(--panel-hover);
-    transform: translateY(-4px);
-    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.1);
-  }
-  .strength-icon {
-    font-size: 28px; width: 56px; height: 56px; border-radius: 12px;
-    background: rgba(99, 102, 241, 0.1); display: flex; align-items: center; justify-content: center;
-    color: var(--accent); margin-bottom: 24px;
-  }
-  .strength-card h3 { font-size: 20px; font-weight: 700; margin: 0 0 12px; }
-  .strength-card p { color: var(--text-dim); font-size: 15px; margin: 0; line-height: 1.6; }
-
-  /* ---------- Solutions / Services ---------- */
-  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .service-card {
-    background: var(--panel); border: 1px solid var(--border); border-radius: 24px;
-    overflow: hidden; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    display: flex; flex-direction: column;
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  }
-  .service-card:hover {
-    border-color: var(--border-hover); background: var(--panel-hover);
-    transform: translateY(-6px);
-    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
-  }
-  .service-image-box {
-    width: 100%; height: 200px; overflow: hidden; position: relative;
-    border-bottom: 1px solid var(--border); background: #000;
-  }
-  .service-img {
-    width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: transform 0.4s ease;
-  }
-  .service-card:hover .service-img { transform: scale(1.05); opacity: 1; }
-  
-  .service-content { padding: 28px; flex: 1; display: flex; flex-direction: column; }
-  .service-tag {
-    font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--cyan);
-    margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em;
-  }
-  .service-card h3 { font-size: 22px; font-weight: 700; margin: 0 0 14px; line-height: 1.3; }
-  .service-card p { color: var(--text-dim); font-size: 14px; margin: 0 0 20px; line-height: 1.6; flex-grow: 1; }
-  
-  .tech-stack-box { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
-  .tech-tag {
-    font-family: var(--mono); font-size: 11px; font-weight: 500;
-    background: rgba(255,255,255,0.03); color: var(--text-dim);
-    padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);
-  }
-
-  /* ---------- Process Section ---------- */
-  .timeline { display: flex; justify-content: space-between; position: relative; margin-top: 40px; }
-  .timeline::before {
-    content: ''; position: absolute; top: 28px; left: 0; right: 0; height: 2px;
-    background: rgba(99, 102, 241, 0.15); z-index: 1;
-  }
-  .step { position: relative; z-index: 2; text-align: center; width: 22%; }
-  .step-num {
-    width: 56px; height: 56px; border-radius: 50%; background: #0b0f19;
-    border: 2px solid var(--accent); color: var(--accent); font-weight: 800;
-    font-family: var(--mono); font-size: 18px; display: flex; align-items: center;
-    justify-content: center; margin: 0 auto 20px; transition: all 0.3s;
-    box-shadow: 0 0 0 8px #060813;
-  }
-  .step:hover .step-num {
-    background: var(--accent); color: #fff;
-    box-shadow: 0 0 20px var(--accent-glow), 0 0 0 8px #060813;
-  }
-  .step h3 { font-size: 18px; font-weight: 700; margin: 0 0 8px; }
-  .step p { color: var(--text-dim); font-size: 13px; margin: 0; line-height: 1.5; }
-
-  /* ---------- Inquiry / Form Section ---------- */
-  .contact-layout { display: grid; grid-template-columns: 4fr 5fr; gap: 40px; align-items: start; }
-  
-  .contact-info-card {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
-    border: 1px solid var(--border); border-radius: 24px; padding: 40px;
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  }
-  .contact-info-card h3 { font-size: 26px; font-weight: 800; margin: 0 0 16px; }
-  .contact-info-card p { color: var(--text-dim); font-size: 15px; margin: 0 0 32px; line-height: 1.6; }
-  
-  .email-box {
-    background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 16px; padding: 18px 24px; display: flex; align-items: center;
-    justify-content: space-between; margin-bottom: 24px; position: relative;
-  }
-  .email-text { font-family: var(--mono); font-size: 16px; color: var(--text); font-weight: 600; }
-  
-  .copy-btn {
-    font-size: 13px; font-weight: 700; color: var(--cyan); background: transparent;
-    border: none; cursor: pointer; padding: 4px 8px; transition: opacity 0.2s;
-  }
-  .copy-btn:hover { opacity: 0.8; }
-  .copied-toast {
-    position: absolute; bottom: -28px; right: 24px; font-size: 11px;
-    color: var(--live); font-family: var(--mono); opacity: 0; transition: opacity 0.3s;
-    pointer-events: none;
-  }
-
-  .form-card {
-    background: var(--panel); border: 1px solid var(--border); border-radius: 24px;
-    padding: 40px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  }
-  .form-group { margin-bottom: 20px; }
-  .form-group label {
-    display: block; font-size: 13px; font-weight: 600; color: var(--text-dim);
-    margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;
-  }
-  .form-input, .form-textarea {
-    width: 100%; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10px; padding: 12px 16px; color: #fff; font-family: inherit;
-    font-size: 15px; transition: border-color 0.2s;
-  }
-  .form-input:focus, .form-textarea:focus {
-    outline: none; border-color: var(--accent);
-  }
-  .form-textarea { height: 120px; resize: none; }
-  
-  .submit-btn {
-    width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
-    font-size: 15px; font-weight: 700; color: #fff; background: var(--accent);
-    padding: 14px; border-radius: 10px; border: none; cursor: pointer;
-    transition: all 0.2s; box-shadow: 0 6px 20px var(--accent-glow);
-  }
-  .submit-btn:hover {
-    background: #4f46e5; transform: translateY(-1px);
-    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
-  }
-
-  /* ---------- Footer ---------- */
-  footer {
-    border-top: 1px solid rgba(255,255,255,0.05); padding: 40px 0;
-    margin-top: 80px; text-align: center;
-  }
-  footer p { margin: 0; font-family: var(--mono); font-size: 13px; color: var(--text-faint); }
-
-  @media (max-width: 900px) {
-    .strengths, .services-grid, .timeline { grid-template-columns: 1fr; display: flex; flex-direction: column; gap: 24px; }
-    .contact-layout { grid-template-columns: 1fr; }
-    .timeline::before { display: none; }
-    .step { width: 100%; text-align: left; display: flex; gap: 20px; align-items: flex-start; }
-    .step-num { margin: 0; flex-shrink: 0; }
-    .step-content { padding-top: 4px; }
-  }
-</style>
+	<meta charset="utf-8" />
+	<title>pl3.kr :: 프로젝트 의뢰 & 협업 (1인 빌더)</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="1인 빌더 프리랜서 프로젝트 의뢰 랜딩페이지" name="description" />
+	<meta content="pl3.kr" name="author" />
+	
+	<!-- ================== BEGIN core-css ================== -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+	<link href="color_admin_assets/css/one-page-parallax/vendor.min.css" rel="stylesheet" />
+	<link href="color_admin_assets/css/one-page-parallax/app.min.css" rel="stylesheet" />
+	<!-- ================== END core-css ================== -->
+	
+	<style>
+		/* Custom Style Overrides for work.html */
+		body {
+			font-family: 'Outfit', 'Noto Sans KR', 'Open Sans', sans-serif;
+		}
+		.theme-btn-custom {
+			background: #00acac;
+			color: #fff;
+			border: none;
+		}
+		.theme-btn-custom:hover {
+			background: #008a8a;
+			color: #fff;
+		}
+		.service-img-box {
+			height: 180px;
+			overflow: hidden;
+			border-radius: 8px 8px 0 0;
+			background: #000;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.service-img-box img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			opacity: 0.8;
+			transition: transform 0.3s ease;
+		}
+		.service:hover .service-img-box img {
+			transform: scale(1.05);
+			opacity: 1;
+		}
+		.service-info {
+			padding: 20px;
+			border: 1px solid rgba(0,0,0,0.08);
+			border-top: none;
+			border-radius: 0 0 8px 8px;
+			background: rgba(255,255,255,0.02);
+		}
+		html[data-theme="dark"] .service-info {
+			background: rgba(0,0,0,0.25);
+			border-color: rgba(255,255,255,0.08);
+		}
+		.tech-badge-container {
+			margin-top: 15px;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 6px;
+		}
+		.tech-badge {
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 11px;
+			font-weight: 600;
+			background: rgba(0, 172, 172, 0.1);
+			color: #00acac;
+			border: 1px solid rgba(0, 172, 172, 0.2);
+			padding: 2px 8px;
+			border-radius: 4px;
+		}
+		.email-copy-box {
+			background: rgba(0, 0, 0, 0.05);
+			border: 1px solid rgba(0,0,0,0.1);
+			border-radius: 8px;
+			padding: 15px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 20px;
+			position: relative;
+		}
+		html[data-theme="dark"] .email-copy-box {
+			background: rgba(255, 255, 255, 0.03);
+			border-color: rgba(255,255,255,0.1);
+		}
+		.email-text {
+			font-family: 'JetBrains Mono', monospace;
+			font-weight: 700;
+			font-size: 15px;
+		}
+		.copied-toast {
+			position: absolute;
+			bottom: -22px;
+			right: 15px;
+			font-size: 11px;
+			color: #00acac;
+			font-family: 'JetBrains Mono', monospace;
+			opacity: 0;
+			transition: opacity 0.3s ease;
+		}
+		.work-detail-block {
+			margin-top: 15px;
+			font-size: 13px;
+			line-height: 1.5;
+		}
+		.work-detail-block b {
+			color: #00acac;
+			text-transform: uppercase;
+			display: block;
+			margin-bottom: 3px;
+		}
+		.work-detail-block p {
+			margin-bottom: 10px;
+		}
+		.navbar-brand {
+			font-weight: 800 !important;
+		}
+		.text-theme {
+			color: #00acac !important;
+		}
+	</style>
 </head>
-<body>
+<body data-bs-spy='scroll' data-bs-target='#header' data-bs-offset='51'>
+	<!-- begin #page-container -->
+	<div id="page-container" class="fade">
+		<!-- begin #header -->
+		<div id="header" class="header navbar navbar-transparent navbar-fixed-top navbar-expand-lg">
+			<!-- begin container -->
+			<div class="container">
+				<!-- begin navbar-brand -->
+				<a href="index.html" class="navbar-brand">
+					<span class="brand-text">
+						<span class="text-theme">PL3</span> BUILDER
+					</span>
+				</a>
+				<!-- end navbar-brand -->
+				<!-- begin navbar-toggle -->
+				<button type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#header-navbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<!-- end navbar-header -->
+				<!-- begin navbar-collapse -->
+				<div class="collapse navbar-collapse" id="header-navbar">
+					<ul class="nav navbar-nav navbar-end">
+						<li class="nav-item"><a class="nav-link" href="#home" data-click="scroll-to-target">HOME</a></li>
+						<li class="nav-item"><a class="nav-link" href="#about" data-click="scroll-to-target">ABOUT</a></li>
+						<li class="nav-item"><a class="nav-link" href="#service" data-click="scroll-to-target">SERVICES</a></li>
+						<li class="nav-item"><a class="nav-link" href="#work" data-click="scroll-to-target">WORK</a></li>
+						<li class="nav-item"><a class="nav-link" href="#contact" data-click="scroll-to-target">CONTACT</a></li>
+						<li class="nav-item"><a class="nav-link text-theme" href="index.html">← BACK TO HUB</a></li>
+					</ul>
+				</div>
+				<!-- end navbar-collapse -->
+			</div>
+			<!-- end container -->
+		</div>
+		<!-- end #header -->
+		
+		<!-- begin #home -->
+		<div id="home" class="content has-bg home">
+			<!-- begin content-bg -->
+			<div class="content-bg" style="background-image: url(color_admin_assets/img/bg/bg-home.jpg);" 
+				data-paroller="true" 
+				data-paroller-type="foreground" 
+				data-paroller-factor="-0.25">
+			</div>
+			<!-- end content-bg -->
+			<!-- begin container -->
+			<div class="container home-content">
+				<h1>Idea to Live Product</h1>
+				<h3>기획부터 개발, 클라우드 배포까지 1인 전담 빌드 솔루션</h3>
+				<p>
+					복잡한 기획안을 바탕으로 고성능 Go / Spring Boot 백엔드 서버를 직접 구축하고,<br />
+					데이터 무결성을 지키는 동시성 제어 및 가성비 높은 클라우드 인프라 세팅까지 신속하게 책임집니다.
+				</p>
+				<a href="#contact" class="btn btn-theme btn-primary theme-btn-custom" data-click="scroll-to-target">프로젝트 의뢰하기</a>
+				<a href="#service" class="btn btn-theme btn-outline-white" data-click="scroll-to-target">제공 서비스 보기</a>
+			</div>
+			<!-- end container -->
+		</div>
+		<!-- end #home -->
+		
+		<!-- begin #about -->
+		<div id="about" class="content" data-scrollview="true">
+			<!-- begin container -->
+			<div class="container" data-animation="true" data-animation-type="animate__fadeInDown">
+				<h2 class="content-title">About Collaboration</h2>
+				<p class="content-desc">
+					지루하고 낭비되는 협업 비용을 최소화하고, 프로덕트 출시에 고도로 몰입합니다.
+				</p>
+				<!-- begin row -->
+				<div class="row">
+					<!-- begin col-4 -->
+					<div class="col-lg-4">
+						<div class="about">
+							<h3 class="mb-3">Our Synergy</h3>
+							<p>
+								기획과 개발, 인프라 담당 간의 컨텍스트 스위칭은 프로젝트 비용을 늘리는 가장 큰 요인입니다. 
+								1인 풀스택 빌더와 함께하면 구조적인 단일 파이프라인으로 불필요한 의사소통 프로세스를 전면 단축할 수 있습니다.
+							</p>
+							<p>
+								의뢰인과의 다이렉트 소통을 통해 비즈니스 가치가 반영된 MVP(최소 기능 제품)를 극도로 기민하게 시장에 론칭하며 가설 검증 속도를 비약적으로 늘립니다.
+							</p>
+						</div>
+					</div>
+					<!-- end col-4 -->
+					<!-- begin col-4 -->
+					<div class="col-lg-4">
+						<h3 class="mb-3">Development Philosophy</h3>
+						<div class="about-author">
+							<div class="quote">
+								<i class="fa fa-quote-left"></i>
+								<h3>정합성이 보장된 시스템,<br /><span>그리고 비용의 다이어트</span></h3>
+								<i class="fa fa-quote-right"></i>
+							</div>
+							<div class="author">
+								<div class="info">
+									Full-Stack Builder
+									<small>Go / Spring Boot / DevOps</small>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end col-4 -->
+					<!-- begin col-4 -->
+					<div class="col-lg-4">
+						<h3 class="mb-3">Expertise Level</h3>
+						<!-- begin skills -->
+						<div class="skills">
+							<div class="skills-name">Go & Spring Boot (Backend)</div>
+							<div class="progress mb-3">
+								<div class="progress-bar progress-bar-striped progress-bar-animated bg-theme" style="width: 95%; background-color: #00acac;">
+									<span class="progress-number">95%</span>
+								</div>
+							</div>
+							<div class="skills-name">Database Concurrency Control (Locking)</div>
+							<div class="progress mb-3">
+								<div class="progress-bar progress-bar-striped progress-bar-animated bg-theme" style="width: 90%; background-color: #00acac;">
+									<span class="progress-number">90%</span>
+								</div>
+							</div>
+							<div class="skills-name">Full-Stack RWD Development (JS/CSS)</div>
+							<div class="progress mb-3">
+								<div class="progress-bar progress-bar-striped progress-bar-animated bg-theme" style="width: 85%; background-color: #00acac;">
+									<span class="progress-number">85%</span>
+								</div>
+							</div>
+							<div class="skills-name">Cloud Cost Optimization & Monitoring</div>
+							<div class="progress mb-3">
+								<div class="progress-bar progress-bar-striped progress-bar-animated bg-theme" style="width: 80%; background-color: #00acac;">
+									<span class="progress-number">80%</span>
+								</div>
+							</div>
+						</div>
+						<!-- end skills -->
+					</div>
+					<!-- end col-4 -->
+				</div>
+				<!-- end row -->
+			</div>
+			<!-- end container -->
+		</div>
+		<!-- end #about -->
+		
+		<!-- begin #milestone -->
+		<div id="milestone" class="content bg-black-darker has-bg" data-scrollview="true">
+			<!-- begin content-bg -->
+			<div class="content-bg" style="background-image: url(color_admin_assets/img/bg/bg-milestone.jpg)"></div>
+			<!-- end content-bg -->
+			<!-- begin container -->
+			<div class="container">
+				<!-- begin row -->
+				<div class="row">
+					<!-- begin col-3 -->
+					<div class="col-lg-3 milestone-col">
+						<div class="milestone">
+							<div class="number" data-animation="true" data-animation-type="number" data-final-number="4">4</div>
+							<div class="title">Active Services</div>
+						</div>
+					</div>
+					<!-- end col-3 -->
+					<!-- begin col-3 -->
+					<div class="col-lg-3 milestone-col">
+						<div class="milestone">
+							<div class="number" data-animation="true" data-animation-type="number" data-final-number="99">99.9%</div>
+							<div class="title">Service Uptime</div>
+						</div>
+					</div>
+					<!-- end col-3 -->
+					<!-- begin col-3 -->
+					<div class="col-lg-3 milestone-col">
+						<div class="milestone">
+							<div class="number" data-animation="true" data-animation-type="number" data-final-number="100">100%</div>
+							<div class="title">Data Consistency</div>
+						</div>
+					</div>
+					<!-- end col-3 -->
+					<!-- begin col-3 -->
+					<div class="col-lg-3 milestone-col">
+						<div class="milestone">
+							<div class="number" data-animation="true" data-animation-type="number" data-final-number="1">1-Person</div>
+							<div class="title">Full-Cycle Builder</div>
+						</div>
+					</div>
+					<!-- end col-3 -->
+				</div>
+				<!-- end row -->
+			</div>
+			<!-- end container -->
+		</div>
+		<!-- end #milestone -->
+		
+		<!-- begin #service -->
+		<div id="service" class="content" data-scrollview="true">
+			<!-- begin container -->
+			<div class="container">
+				<h2 class="content-title">Expertise & Solutions</h2>
+				<p class="content-desc">
+					비즈니스의 가동력과 속도를 비약적으로 증진시킬 세 가지 핵심 기술 솔루션
+				</p>
+				<!-- begin row -->
+				<div class="row">
+					<!-- begin col-4 -->
+					<div class="col-lg-4">
+						<div class="service">
+							<div class="service-img-box">
+								<img src="assets/mvp_dev.png" alt="MVP Development">
+							</div>
+							<div class="service-info">
+								<h4 class="title">01. 신속한 MVP 설계 및 풀스택 구축</h4>
+								<p class="desc">빠른 가설 검증과 시장 론칭을 목표로, 사용자 경험이 녹아있는 완결성 높은 프로토타입 제품군을 가동 가능한 형태로 신속 배포합니다.</p>
+								<div class="tech-badge-container">
+									<span class="tech-badge">Fast Prototyping</span>
+									<span class="tech-badge">Core Features Only</span>
+									<span class="tech-badge">Deployment Ready</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end col-4 -->
+					<!-- begin col-4 -->
+					<div class="col-lg-4">
+						<div class="service">
+							<div class="service-img-box">
+								<img src="assets/backend_eng.png" alt="High Performance Server">
+							</div>
+							<div class="service-info">
+								<h4 class="title">02. 고가용성 백엔드 및 동시성 설계</h4>
+								<p class="desc">Go 및 Spring Boot 기술 스택을 적극 활용하여 비즈니스의 트랜잭션 충돌(비관적 락 등 제어)을 완벽 차단하고 고성능 API 서버를 설계합니다.</p>
+								<div class="tech-badge-container">
+									<span class="tech-badge">Go / Spring Boot</span>
+									<span class="tech-badge">Locking Mechanisms</span>
+									<span class="tech-badge">Transaction Isolation</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end col-4 -->
+					<!-- begin col-4 -->
+					<div class="col-lg-4">
+						<div class="service">
+							<div class="service-img-box">
+								<img src="assets/sys_tuning.png" alt="Infrastructure Tuning">
+							</div>
+							<div class="service-info">
+								<h4 class="title">03. 인프라 최적화 및 DB 튜닝</h4>
+								<p class="desc">클라우드 서버의 비효율적 과부하 비용을 절감하며, Redis Stream 등을 결합한 대기열 처리 및 슬라이딩 윈도우 캐싱 인프라 튜닝을 구축합니다.</p>
+								<div class="tech-badge-container">
+									<span class="tech-badge">PostgreSQL / MariaDB</span>
+									<span class="tech-badge">Redis Stream</span>
+									<span class="tech-badge">Cost Reduction</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end col-4 -->
+				</div>
+				<!-- end row -->
+			</div>
+			<!-- end container -->
+		</div>
+		<!-- end #service -->
+		
+		<!-- begin #work -->
+		<div id="work" class="content" data-scrollview="true">
+			<!-- begin container -->
+			<div class="container" data-animation="true" data-animation-type="animate__fadeInDown">
+				<h2 class="content-title">Proven Portfolio</h2>
+				<p class="content-desc">
+					실제 프로덕션 환경에 배포되어 동시성 제어 및 가동 인프라로 검증된 핵심 프로젝트 목록
+				</p>
+				<!-- begin row -->
+				<div class="row">
+					<!-- begin col-6 -->
+					<div class="col-lg-6 mb-4">
+						<div class="about" style="border: 1px solid rgba(0,0,0,0.06); padding: 25px; border-radius: 12px; height: 100%;">
+							<h3 class="mb-2"><span class="text-theme">01.</span> pl3.kr (단축 URL 서비스)</h3>
+							<span class="badge bg-success mb-3">OPERATING (LIVE)</span>
+							<div class="tech-badge-container mb-3" style="margin-top:0;">
+								<span class="tech-badge">Spring Boot</span>
+								<span class="tech-badge">MariaDB</span>
+							</div>
+							<div class="work-detail-block">
+								<b>Problem</b>
+								<p>긴 URL 공유 시 가독성 및 유입 정보 통계 수집 불가 현상.</p>
+								<b>Solution</b>
+								<p>커스텀 슬러그 매핑 엔진 구축 및 유입 분석 모듈 연동.</p>
+								<b>Impact</b>
+								<p>전체 마이크로 서비스 링크 공유 분석 기반망 구축.</p>
+							</div>
+						</div>
+					</div>
+					<!-- end col-6 -->
+					<!-- begin col-6 -->
+					<div class="col-lg-6 mb-4">
+						<div class="about" style="border: 1px solid rgba(0,0,0,0.06); padding: 25px; border-radius: 12px; height: 100%;">
+							<h3 class="mb-2"><span class="text-theme">02.</span> buzz48.pl3.kr (타임어택 게시판)</h3>
+							<span class="badge bg-success mb-3">OPERATING (LIVE)</span>
+							<div class="tech-badge-container mb-3" style="margin-top:0;">
+								<span class="tech-badge">Go</span>
+								<span class="tech-badge">PostgreSQL (Neon)</span>
+								<span class="tech-badge">Redis Stream</span>
+							</div>
+							<div class="work-detail-block">
+								<b>Problem</b>
+								<p>실시간성 익명 커뮤니티의 급격한 쓰기 병목 및 48시간 피드 만료 처리 지연.</p>
+								<b>Solution</b>
+								<p>Redis Stream 기반 비동기 파이프라인 설계 및 슬라이딩 윈도우 알고리즘 적용.</p>
+								<b>Impact</b>
+								<p>분산 아키텍처 결합을 통한 서버 비용 70% 감축.</p>
+							</div>
+						</div>
+					</div>
+					<!-- end col-6 -->
+				</div>
+				<!-- end row -->
+				<!-- begin row -->
+				<div class="row mt-4">
+					<!-- begin col-6 -->
+					<div class="col-lg-6 mb-4">
+						<div class="about" style="border: 1px solid rgba(0,0,0,0.06); padding: 25px; border-radius: 12px; height: 100%;">
+							<h3 class="mb-2"><span class="text-theme">03.</span> watch.pl3.kr (헬스체크 관제)</h3>
+							<span class="badge bg-success mb-3">OPERATING (LIVE)</span>
+							<div class="tech-badge-container mb-3" style="margin-top:0;">
+								<span class="tech-badge">Go</span>
+								<span class="tech-badge">Endpoint Monitoring</span>
+							</div>
+							<div class="work-detail-block">
+								<b>Problem</b>
+								<p>다수의 서버 분산 시 장애 인지 시간 지연 및 로그 산발 현상.</p>
+								<b>Solution</b>
+								<p>통합 서비스 헬스체크 대시보드 구축 및 상태 동기화 바 연동.</p>
+								<b>Impact</b>
+								<p>장애 발생 시 5분 이내 인지 및 대응 개시 관제망 확보.</p>
+							</div>
+						</div>
+					</div>
+					<!-- end col-6 -->
+					<!-- begin col-6 -->
+					<div class="col-lg-6 mb-4">
+						<div class="about" style="border: 1px solid rgba(0,0,0,0.06); padding: 25px; border-radius: 12px; height: 100%;">
+							<h3 class="mb-2"><span class="text-theme">04.</span> inven.pl3.kr (치과 재고 관리 SaaS)</h3>
+							<span class="badge bg-success mb-3">OPERATING (LIVE)</span>
+							<div class="tech-badge-container mb-3" style="margin-top:0;">
+								<span class="tech-badge">PHP</span>
+								<span class="tech-badge">MariaDB</span>
+								<span class="tech-badge">Pessimistic Locking</span>
+							</div>
+							<div class="work-detail-block">
+								<b>Problem</b>
+								<p>다수 단말기의 동시 재고 입출고 충돌로 인한 정합성 왜곡.</p>
+								<b>Solution</b>
+								<p>비관적 락(Pessimistic Locking)을 활용한 동시성 트랜잭션 제어.</p>
+								<b>Impact</b>
+								<p>재고 오차율 0% 유지로 의료 인프라 신뢰성 충족.</p>
+							</div>
+						</div>
+					</div>
+					<!-- end col-6 -->
+				</div>
+				<!-- end row -->
+			</div>
+			<!-- end container -->
+		</div>
+		<!-- end #work -->
+		
+		<!-- begin #contact -->
+		<div id="contact" class="content bg-blue" data-scrollview="true">
+			<!-- begin container -->
+			<div class="container">
+				<h2 class="content-title">Start Project</h2>
+				<p class="content-desc">
+					아이디어가 고도화된 프로덕트가 되기까지, 최선의 비즈니스 솔루션을 제공합니다.
+				</p>
+				<!-- begin row -->
+				<div class="row">
+					<!-- begin col-6 -->
+					<div class="col-lg-6" data-animation="true" data-animation-type="animate__fadeInLeft">
+						<h3>의뢰 문의하기</h3>
+						<p>
+							성능 튜닝 의뢰, DB 정합성 및 동시성 문제 해결, 또는 신규 MVP 프로토타입 론칭이 필요하시다면 우측 문의 양식을 기재해 주세요.
+							확인 후 신속히 요구사항 분석 피드백을 회신해 드립니다.
+						</p>
+						<div class="email-copy-box">
+							<span class="email-text" id="emailAddr">contact@pl3.kr</span>
+							<button class="btn btn-xs btn-theme theme-btn-custom" onclick="copyEmail()">Copy Email</button>
+							<span class="copied-toast" id="copyToast">Email Copied!</span>
+						</div>
+						<p>
+							<strong>Email:</strong> contact@pl3.kr<br />
+							<strong>Working Hours:</strong> Mon - Fri, 09:00 - 18:00 (KST)
+						</p>
+					</div>
+					<!-- end col-6 -->
+					<!-- begin col-6 -->
+					<div class="col-lg-6 form-col" data-animation="true" data-animation-type="animate__fadeInRight">
+						<form class="form-horizontal" onsubmit="event.preventDefault(); sendInquiry();">
+							<div class="row mb-3">
+								<label class="col-form-label col-lg-3 text-lg-right">의뢰자명 <span class="text-theme">*</span></label>
+								<div class="col-lg-9">
+									<input type="text" id="inquiryName" class="form-control" placeholder="성함 혹은 기업명" required />
+								</div>
+							</div>
+							<div class="row mb-3">
+								<label class="col-form-label col-lg-3 text-lg-right">프로젝트 유형 <span class="text-theme">*</span></label>
+								<div class="col-lg-9">
+									<input type="text" id="inquiryType" class="form-control" placeholder="예: MVP 신규 개발, 백엔드 서버 튜닝" required />
+								</div>
+							</div>
+							<div class="row mb-3">
+								<label class="col-form-label col-lg-3 text-lg-right">상세 요구사항 <span class="text-theme">*</span></label>
+								<div class="col-lg-9">
+									<textarea id="inquiryMessage" class="form-control" rows="8" placeholder="구상 중이신 일정, 대략적인 예산 및 세부 비즈니스 로직을 자유롭게 기재해 주세요." required></textarea>
+								</div>
+							</div>
+							<div class="row mb-3">
+								<label class="col-form-label col-lg-3 text-lg-right"></label>
+								<div class="col-lg-9 text-left">
+									<button type="submit" class="btn btn-theme btn-primary theme-btn-custom btn-block">의뢰 메일 전송하기</button>
+								</div>
+							</div>
+						</form>
+					</div>
+					<!-- end col-6 -->
+				</div>
+				<!-- end row -->
+			</div>
+			<!-- end container -->
+		</div>
+		<!-- end #contact -->
+		
+		<!-- begin #footer -->
+		<div id="footer" class="footer">
+			<div class="container">
+				<div class="footer-brand">
+					<span class="text-theme">PL3</span> BUILDER
+				</div>
+				<p>
+					&copy; Copyright pl3.kr 2026 <br />
+					Custom engineering & building solutions. Built solo.
+				</p>
+			</div>
+		</div>
+		<!-- end #footer -->
+		
+		<!-- BEGIN theme-panel -->
+		<div class="theme-panel">
+			<a href="javascript:;" data-toggle="theme-panel-expand" class="theme-collapse-btn"><i class="fa fa-cog"></i></a>
+			<div class="theme-panel-content">
+				<div class="row mt-10px pt-3px">
+					<div class="col-9 control-label text-dark fw-bold">
+						<div class="d-flex">Dark Mode <span class="badge bg-primary ms-2 position-relative py-4px px-6px d-flex align-items-center rounded-1">NEW</span></div>
+						<div class="lh-sm fs-12px">
+							<small class="text-dark opacity-50">
+								Adjust the appearance to reduce glare.
+							</small>
+						</div>
+					</div>
+					<div class="col-3 d-flex">
+						<div class="form-check form-switch ms-auto mb-0 mt-2px">
+							<input type="checkbox" class="form-check-input" name="app-theme-dark-mode" id="appThemeDarkMode" value="1" />
+							<label class="form-check-label" for="appThemeDarkMode"></label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END theme-panel -->
+	</div>
+	<!-- end #page-container -->
+	
+	<!-- ================== BEGIN BASE JS ================== -->
+	<script src="color_admin_assets/js/one-page-parallax/vendor.min.js"></script>
+	<script src="color_admin_assets/js/one-page-parallax/app.min.js"></script>
+	<!-- ================== END BASE JS ================== -->
+	
+	<script>
+		// Copy Email functionality
+		function copyEmail() {
+			var email = document.getElementById('emailAddr').textContent;
+			navigator.clipboard.writeText(email).then(function() {
+				var toast = document.getElementById('copyToast');
+				toast.style.opacity = '1';
+				setTimeout(function() {
+					toast.style.opacity = '0';
+				}, 2000);
+			});
+		}
 
-<div class="glow-orb orb-1"></div>
-<div class="glow-orb orb-2"></div>
-
-<header>
-  <div class="wrap header-inner">
-    <a href="index.html" class="logo">PL3 BUILDER</a>
-    <a href="index.html" class="back-btn">← Back to Hub</a>
-  </div>
-</header>
-
-<div class="wrap">
-  <!-- Hero -->
-  <section class="hero">
-    <span class="hero-tag">Full-Stack Solution Builder</span>
-    <h1>Idea to Live Product.<br>아이디어를 <span>프로덕트</span>로 빌드합니다.</h1>
-    <p>기획 의도 분석부터 확장성 높은 아키텍처 설계, Go / Spring Boot 기반 고성능 API 서버 구축, 복잡한 DB 동시성 제어 및 클라우드 배포까지 서비스 실현의 전 과정을 1인 파이프라인으로 해결합니다.</p>
-    <div class="hero-ctas">
-      <a href="#contact" class="btn-primary">프로젝트 의뢰하기</a>
-      <a href="#services" class="btn-secondary">제공 서비스 보기</a>
-    </div>
-  </section>
-
-  <!-- Strengths -->
-  <section class="section">
-    <div class="section-title">
-      <h2>Why Collaborate?</h2>
-      <p>1인 빌더와의 협업이 제공하는 독보적인 세 가지 가치</p>
-    </div>
-    <div class="strengths">
-      <div class="strength-card">
-        <div class="strength-icon">⚡</div>
-        <h3>극대화된 론칭 속도</h3>
-        <p>기획자, 개발자, 인프라 담당 간의 지루한 커뮤니케이션 과정을 생략하여 최소 기능 제품(MVP)을 시장에 극도로 빠르게 안착시킵니다.</p>
-      </div>
-      <div class="strength-card">
-        <div class="strength-icon">🛡</div>
-        <h3>무결성 중심 설계</h3>
-        <p>결제 충돌, 재고 정합성 왜곡, 다중 요청 동시성 이슈 등 데이터 오차가 발생하기 쉬운 중차대한 비즈니스 로직을 완벽하게 보호합니다.</p>
-      </div>
-      <div class="strength-card">
-        <div class="strength-icon">📉</div>
-        <h3>효율적 인프라 비용</h3>
-        <p>불필요한 과스펙 자원을 걷어내고, 자가 캐싱 및 정교한 쿼리 최적화를 통해 클라우드 월 서버 유지 비용을 대폭 축소시킵니다.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Services -->
-  <section class="section" id="services">
-    <div class="section-title">
-      <h2>Expertise & Solutions</h2>
-      <p>비즈니스 성장을 위해 즉시 지원 가능한 맞춤형 테크 솔루션</p>
-    </div>
-    <div class="services-grid">
-      <!-- Card 1 -->
-      <div class="service-card">
-        <div class="service-image-box">
-          <img src="assets/mvp_dev.png" class="service-img" alt="Rapid MVP logo">
-        </div>
-        <div class="service-content">
-          <span class="service-tag">01 · Launch</span>
-          <h3>신속한 MVP 제품 설계 및 개발</h3>
-          <p>비즈니스 검증에 핵심적인 기능만 압축하여 배포 가능한 풀스택 제품을 제작합니다. 모던하고 가벼운 아키텍처로 신속한 피드백 수집을 돕습니다.</p>
-          <div class="tech-stack-box">
-            <span class="tech-tag">MVP Development</span>
-            <span class="tech-tag">Full-Stack</span>
-            <span class="tech-tag">UX/UI Setup</span>
-          </div>
-        </div>
-      </div>
-      <!-- Card 2 -->
-      <div class="service-card">
-        <div class="service-image-box">
-          <img src="assets/backend_eng.png" class="service-img" alt="Backend server logo">
-        </div>
-        <div class="service-content">
-          <span class="service-tag">02 · Scalability</span>
-          <h3>고가용성 백엔드 아키텍처 구축</h3>
-          <p>Go, Spring Boot 기반으로 동시 처리에 유리한 백엔드 API를 개발합니다. 비즈니스 로직에 맞춘 트랜잭션 격리 제어로 서비스의 신뢰성을 확보합니다.</p>
-          <div class="tech-stack-box">
-            <span class="tech-tag">Go</span>
-            <span class="tech-tag">Spring Boot</span>
-            <span class="tech-tag">Pessimistic Locking</span>
-          </div>
-        </div>
-      </div>
-      <!-- Card 3 -->
-      <div class="service-card">
-        <div class="service-image-box">
-          <img src="assets/sys_tuning.png" class="service-img" alt="System tuning logo">
-        </div>
-        <div class="service-content">
-          <span class="service-tag">03 · Cost & Speed</span>
-          <h3>인프라 최적화 및 DB 성능 튜닝</h3>
-          <p>잘못 산정된 클라우드 비용을 최소화하고, 병목 쿼리와 인덱싱을 튜닝하여 DB 속도를 비약적으로 개선합니다. Redis Stream 등을 이용한 대기 큐 인프라 구축도 가능합니다.</p>
-          <div class="tech-stack-box">
-            <span class="tech-tag">PostgreSQL</span>
-            <span class="tech-tag">Redis Stream</span>
-            <span class="tech-tag">Cost Reduction</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Process -->
-  <section class="section">
-    <div class="section-title">
-      <h2>Collaboration Process</h2>
-      <p>기획부터 최종 프로덕트 안착까지의 4단계 협업 여정</p>
-    </div>
-    <div class="timeline">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-content">
-          <h3>요구사항 분석</h3>
-          <p>목표하시는 비즈니스 개념과 기술적인 도전 과제를 심도 있게 청취하고 조율합니다.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-content">
-          <h3>설계 및 견적 제안</h3>
-          <p>투명한 마일스톤, 최적의 기술 스택, 인프라 비용 예측안과 함께 개발 견적을 전달합니다.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-content">
-          <h3>집중 개발 & 데모</h3>
-          <p>마일스톤에 맞춘 주 단위 진척 상황 데모를 제공하여 제품의 정합성을 수시 검증합니다.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">04</div>
-        <div class="step-content">
-          <h3>배포 & 가동 안정화</h3>
-          <p>무중단 배포망을 가동하고 실사용 1개월간 밀착 모니터링하여 인프라를 안정 궤도에 올립니다.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact Form & Info -->
-  <section class="section" id="contact">
-    <div class="contact-layout">
-      <!-- Info Left -->
-      <div class="contact-info-card">
-        <h3>프로젝트 시작하기</h3>
-        <p>구상하고 계신 아이디어나 즉각적인 문제 해결(성능 튜닝, 동시성 오류 수정 등)이 필요하시다면 우측 문의 양식을 채우거나 이메일로 자유롭게 연락해 주시기 바랍니다.</p>
-        <div class="email-box">
-          <span class="email-text" id="emailVal">contact@pl3.kr</span>
-          <button class="copy-btn" onclick="copyEmail()">Copy Email</button>
-          <span class="copied-toast" id="copyToast">Email Copied!</span>
-        </div>
-      </div>
-      
-      <!-- Form Right -->
-      <div class="form-card">
-        <div class="form-group">
-          <label for="clientName">의뢰자 성함 / 기업명</label>
-          <input type="text" id="clientName" class="form-input" placeholder="예: 홍길동 / 주식회사 에이비씨">
-        </div>
-        <div class="form-group">
-          <label for="projectType">프로젝트 유형</label>
-          <input type="text" id="projectType" class="form-input" placeholder="예: 신규 MVP 구축, 백엔드 API 튜닝, 인프라 이전 등">
-        </div>
-        <div class="form-group">
-          <label for="projectBudget">희망 예산 & 일정</label>
-          <input type="text" id="projectBudget" class="form-input" placeholder="예: 1,000만원 내외 / 2개월 이내">
-        </div>
-        <div class="form-group">
-          <label for="projectDetails">요구 사항 상세 및 구상 내용</label>
-          <textarea id="projectDetails" class="form-textarea" placeholder="아이디어의 핵심 내용이나 직면한 서버 오류 증상 등을 간단하게 적어주세요."></textarea>
-        </div>
-        <button class="submit-btn" onclick="sendInquiryMail()">
-          <span>메일로 의뢰서 발송하기</span>
-        </button>
-      </div>
-    </div>
-  </section>
-</div>
-
-<footer>
-  <div class="wrap">
-    <p>© 2026 pl3.kr — Custom engineering & building solutions.</p>
-  </div>
-</footer>
-
-<script>
-  // Copy Email to Clipboard
-  function copyEmail() {
-    const email = document.getElementById('emailVal').textContent;
-    navigator.clipboard.writeText(email).then(() => {
-      const toast = document.getElementById('copyToast');
-      toast.style.opacity = '1';
-      setTimeout(() => {
-        toast.style.opacity = '0';
-      }, 2000);
-    });
-  }
-
-  // Pre-fill mailto link with form values and redirect
-  function sendInquiryMail() {
-    const name = document.getElementById('clientName').value.trim() || '미지정';
-    const type = document.getElementById('projectType').value.trim() || '미지정';
-    const budget = document.getElementById('projectBudget').value.trim() || '미지정';
-    const details = document.getElementById('projectDetails').value.trim() || '내용 없음';
-
-    const subject = encodeURIComponent(`[프로젝트 의뢰] ${name} - ${type}`);
-    const body = encodeURIComponent(
-      `의뢰자/기업명: ${name}\n` +
-      `프로젝트 유형: ${type}\n` +
-      `희망 예산 & 일정: ${budget}\n\n` +
-      `상세 요구 사항:\n${details}\n`
-    );
-
-    window.location.href = `mailto:contact@pl3.kr?subject=${subject}&body=${body}`;
-  }
-</script>
-
+		// Email transmission linkage
+		function sendInquiry() {
+			var name = document.getElementById('inquiryName').value.trim();
+			var type = document.getElementById('inquiryType').value.trim();
+			var msg = document.getElementById('inquiryMessage').value.trim();
+			
+			var subject = encodeURIComponent('[프로젝트 의뢰] ' + name + ' - ' + type);
+			var body = encodeURIComponent(
+				'의뢰자/기업명: ' + name + '\n' +
+				'의뢰 프로젝트 유형: ' + type + '\n\n' +
+				'상세 요구사항:\n' + msg
+			);
+			
+			window.location.href = 'mailto:contact@pl3.kr?subject=' + subject + '&body=' + body;
+		}
+	</script>
 </body>
 </html>
