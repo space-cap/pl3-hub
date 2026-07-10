@@ -486,7 +486,7 @@ const projects = [
     url: "https://pl3.kr/",
     status: "live",
     logo: "assets/link_shortener.png",
-    stack: ["PHP", "MariaDB"],
+    stack: ["Spring Boot", "MariaDB"],
     problem: "긴 URL을 공유할 때 가독성이 떨어지며, 단순 공유 용도를 넘어 해당 링크가 언제, 얼마나 유입되었는지의 상세 통계를 정합성 있게 관측하기 어려웠습니다.",
     solution: "커스텀 슬러그(Slug) 매핑 시스템과 유입 통계 분석 모듈을 지원하는 고성능 단축 URL 엔진을 직접 개발하였습니다. pl3.kr 산하 모든 마이크로 서비스의 유입 분석 인프라로 긴밀히 통합 운영되고 있습니다.",
     impact: "독립된 분산 링크 유입 처리를 통해 포트폴리오 전반의 유입 유효성을 검증하는 중추 인프라로 작동하고 있습니다."
@@ -498,7 +498,7 @@ const projects = [
     url: "https://buzz48.pl3.kr/",
     status: "live",
     logo: "assets/time_attack_board.png",
-    stack: ["PostgreSQL (Neon)", "Redis Stream", "Oracle Cloud"],
+    stack: ["Go", "PostgreSQL (Neon)", "Redis Stream", "Oracle Cloud"],
     problem: "실시간성 피드가 핵심인 익명 커뮤니티에서 폭발적인 쓰기 트래픽에 대응하며, 게시물 노출 생명 주기(48시간) 내 동시 유입을 무손실 처리해야 하는 병목이 있었습니다.",
     solution: "Oracle Cloud 인프라에 Redis 캐싱 레이어 및 Redis Stream 메세징 큐를 자가 구축하여 데이터 정합성 비용을 줄였습니다. HOT 알고리즘에 슬라이딩 윈도우 방식을 결합하여 실시간 인기 피드를 산정하며, 신뢰 가능한 시간 연산을 위해 클라이언트와 서버 타임스탬프를 이중 유효성 검사합니다.",
     impact: "PostgreSQL 분산 아키텍처로 안전한 쓰기 분산을 구현했으며, 자체 구축 메모리 풀을 통해 클라우드 호스팅 인프라 비용을 최소화하였습니다."
@@ -510,7 +510,7 @@ const projects = [
     url: "https://watch.pl3.kr/",
     status: "live",
     logo: "assets/server_monitor.png",
-    stack: ["PHP", "실시간 헬스체크"],
+    stack: ["Go", "실시간 헬스체크"],
     problem: "다수의 독립 서버와 데이터베이스가 개별 인프라에 배포되어 있어, 복합 장애 발생 시 장애 원인 지점 규명과 모니터링 통합 대응이 신속하게 이루어지지 못했습니다.",
     solution: "pl3.kr 하위 전 서비스의 데몬 가동 상태와 엔드포인트 응답성 지표를 모니터링하는 상태 대시보드를 구축하였습니다. 상단 시스템 상태 바(Status Bar)가 본 엔진과 동기화되어 장애 징후 시각화를 자동화합니다.",
     impact: "복합 인프라 장애 발생 시 인지 및 조치 개시 시간을 5분 이내로 단축하는 통합 관제망을 확보하였습니다."
